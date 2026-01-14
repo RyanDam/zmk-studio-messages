@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package zmk.sensors;
+
+message Request {
+  oneof request_type {
+    bool list_all_sensors = 1;
+    GetSensorDetailsRequest get_sensor_details = 2;
+    SetSensorDetailsRequest set_sensor_details = 3;
+  }
+}
+
+message GetSensorDetailsRequest { uint32 sensor_id = 1; }
+
+message Response {
+  oneof response_type {
+    ListAllSensorsResponse list_all_sensors = 1;
+    GetSensorDetailsResponse get_sensor_details = 2;
+    SetSensorDetailsResponse set_sensor_details = 3;
+  }
+}
+
+enum SetSensorDetailsResponse {
+  SET_SENSOR_DETAILS_RESP_OK = 0;
+  SET_SENSOR_DETAILS_RESP_INVALID_SENSOR = 1;
+  SET_SENSOR_DETAILS_RESP_INVALID_LAYER = 2;
+  SET_SENSOR_DETAILS_RESP_INVALID_BEHAVIOR = 3;
+  SET_SENSOR_DETAILS_RESP_INVALID_PARAMETERS = 4;
+}
+
+message ListAllSensorsResponse { repeated uint32 sensors = 1; }
+
+message SetSensorDetailsRequest {
+  uint32 sensor_id = 1;
+  uint32 layer_id = 2;
+  repeated BehaviorBinding bindings = 3;
+}
+
+message GetSensorDetailsResponse {
+  uint32 sensor_id = 1;
+  string display_name = 2;
+  repeated Layer layers = 3;
+}
+
+message Layer {
+  uint32 id = 1;
+  string name = 2;
+  repeated BehaviorBinding bindings = 3;
+}
+
+message BehaviorBinding {
+  sint32 behavior_id = 1;
+  uint32 param1 = 2;
+  uint32 param2 = 3;
+}
+
+message Notification {
+  oneof notification_type { bool unsaved_changes_status_changed = 1; }
+}
