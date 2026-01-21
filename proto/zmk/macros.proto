@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package zmk.macros;
+
+import "keymap.proto";
+
+message Request {
+  oneof request_type {
+    bool get_macro_list = 1;
+    uint32 get_macro_details = 2;
+    SetMacroDetailsRequest set_macro_details = 3;
+  }
+}
+
+message Response {
+  oneof response_type {
+    MacroList get_macro_list = 1;
+    MacroDetails get_macro_details = 2;
+    SetMacroDetailsResponse set_macro_details = 3;
+  }
+}
+
+message MacroList { repeated MacroInfo macros = 1; }
+
+message MacroInfo {
+  uint32 index = 1;
+  uint32 max_steps = 2;
+}
+
+message MacroDetails {
+  uint32 index = 1;
+  repeated zmk.keymap.BehaviorBinding bindings = 2;
+}
+
+message SetMacroDetailsRequest {
+  uint32 index = 1;
+  repeated zmk.keymap.BehaviorBinding bindings = 2;
+}
+
+enum SetMacroDetailsResponse {
+  SET_MACRO_DETAILS_RESP_OK = 0;
+  SET_MACRO_DETAILS_RESP_ERR_GENERIC = 1;
+  SET_MACRO_DETAILS_RESP_ERR_INVALID_INDEX = 2;
+  SET_MACRO_DETAILS_RESP_ERR_TOO_MANY_STEPS = 3;
+}
+
+message Notification {}
