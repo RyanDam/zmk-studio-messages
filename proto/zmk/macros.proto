@@ -27,14 +27,27 @@ message MacroInfo {
   uint32 max_steps = 2;
 }
 
+enum MacroMode {
+  MACRO_MODE_TAP = 0;
+  MACRO_MODE_PRESS = 1;
+  MACRO_MODE_RELEASE = 2;
+}
+
+message MacroStep {
+  MacroMode mode = 1;
+  uint32 wait_ms = 2;
+  uint32 tap_ms = 3;
+  zmk.keymap.BehaviorBinding binding = 4;
+}
+
 message MacroDetails {
   uint32 index = 1;
-  repeated zmk.keymap.BehaviorBinding bindings = 2;
+  repeated MacroStep steps = 2;
 }
 
 message SetMacroDetailsRequest {
   uint32 index = 1;
-  repeated zmk.keymap.BehaviorBinding bindings = 2;
+  repeated MacroStep steps = 2;
 }
 
 enum SetMacroDetailsResponse {

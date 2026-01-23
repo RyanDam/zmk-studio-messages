@@ -1,1 +1,1 @@
-zmk.macros.SetMacroDetailsRequest.bindings max_count:64
+zmk.macros.SetMacroDetailsRequest.steps max_count:64
