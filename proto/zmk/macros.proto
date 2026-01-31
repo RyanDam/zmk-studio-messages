@@ -5,56 +5,77 @@ package zmk.macros;
 import "keymap.proto";
 
 message Request {
-  oneof request_type {
-    bool get_macro_list = 1;
-    uint32 get_macro_details = 2;
-    SetMacroDetailsRequest set_macro_details = 3;
-  }
+    oneof request_type {
+        bool get_macro_list = 1;
+        uint32 get_macro_details = 2;
+        SetMacroDetailsRequest set_macro_details = 3;
+        bool check_unsaved_changes = 4;
+        bool save_changes = 5;
+        bool discard_changes = 6;
+    }
 }
 
 message Response {
-  oneof response_type {
-    MacroList get_macro_list = 1;
-    MacroDetails get_macro_details = 2;
-    SetMacroDetailsResponse set_macro_details = 3;
-  }
+    oneof response_type {
+        MacroList get_macro_list = 1;
+        MacroDetails get_macro_details = 2;
+        SetMacroDetailsResponse set_macro_details = 3;
+        bool check_unsaved_changes = 4;
+        SaveChangesResponse save_changes = 5;
+        bool discard_changes = 6;
+    }
 }
 
 message MacroList { repeated MacroInfo macros = 1; }
 
 message MacroInfo {
-  uint32 index = 1;
-  uint32 max_steps = 2;
+    uint32 index = 1;
+    uint32 max_steps = 2;
 }
 
 enum MacroMode {
-  MACRO_MODE_TAP = 0;
-  MACRO_MODE_PRESS = 1;
-  MACRO_MODE_RELEASE = 2;
+    MACRO_MODE_TAP = 0;
+    MACRO_MODE_PRESS = 1;
+    MACRO_MODE_RELEASE = 2;
 }
 
 message MacroStep {
-  MacroMode mode = 1;
-  uint32 wait_ms = 2;
-  uint32 tap_ms = 3;
-  zmk.keymap.BehaviorBinding binding = 4;
+    MacroMode mode = 1;
+    uint32 wait_ms = 2;
+    uint32 tap_ms = 3;
+    zmk.keymap.BehaviorBinding binding = 4;
 }
 
 message MacroDetails {
-  uint32 index = 1;
-  repeated MacroStep steps = 2;
+    uint32 index = 1;
+    repeated MacroStep steps = 2;
 }
 
 message SetMacroDetailsRequest {
-  uint32 index = 1;
-  repeated MacroStep steps = 2;
+    uint32 index = 1;
+    repeated MacroStep steps = 2;
 }
 
 enum SetMacroDetailsResponse {
-  SET_MACRO_DETAILS_RESP_OK = 0;
-  SET_MACRO_DETAILS_RESP_ERR_GENERIC = 1;
-  SET_MACRO_DETAILS_RESP_ERR_INVALID_INDEX = 2;
-  SET_MACRO_DETAILS_RESP_ERR_TOO_MANY_STEPS = 3;
+    SET_MACRO_DETAILS_RESP_OK = 0;
+    SET_MACRO_DETAILS_RESP_ERR_GENERIC = 1;
+    SET_MACRO_DETAILS_RESP_ERR_INVALID_INDEX = 2;
+    SET_MACRO_DETAILS_RESP_ERR_TOO_MANY_STEPS = 3;
 }
 
-message Notification {}
+message SaveChangesResponse {
+    oneof result {
+        bool ok = 1;
+        SaveChangesErrorCode err = 2;
+    }
+}
+
+enum SaveChangesErrorCode {
+    SAVE_CHANGES_ERR_GENERIC = 0;
+    SAVE_CHANGES_ERR_NOT_SUPPORTED = 1;
+    SAVE_CHANGES_ERR_NO_SPACE = 2;
+}
+
+message Notification {
+    oneof notification_type { bool unsaved_changes_status_changed = 1; }
+}
