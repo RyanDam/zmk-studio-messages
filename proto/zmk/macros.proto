@@ -42,8 +42,7 @@ enum MacroMode {
 message MacroStep {
     MacroMode mode = 1;
     uint32 wait_ms = 2;
-    uint32 tap_ms = 3;
-    zmk.keymap.BehaviorBinding binding = 4;
+    zmk.keymap.BehaviorBinding binding = 3;
 }
 
 message MacroDetails {
