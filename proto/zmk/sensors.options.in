@@ -1,1 +1,2 @@
-zmk.sensors.SetSensorDetailsRequest.bindings max_count:1
+zmk.sensors.SetSensorDetailsRequest.bindings max_count:2
+zmk.sensors.Layer.bindings max_count:2
