@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+package zmk.touchpad;
+
+import "keymap.proto";
+
+enum Mode {
+  MODE_UNSPECIFIED = 0;
+  MODE_GESTURE = 1;
+  MODE_MOUSE_SIMULATION = 2;
+}
+
+message TouchpadConfig {
+  repeated Layer layers = 1;
+  uint32 sensitivity = 2;
+}
+
+message Layer {
+  uint32 id = 1;
+  string name = 2;
+  Mode mode = 3;
+  repeated zmk.keymap.BehaviorBinding bindings = 4;
+}
+
+message Request {
+  oneof request_type {
+    GetTouchpadConfigRequest get_config = 1;
+    SetTouchpadModeRequest set_mode = 2;
+    SetLayerBindingsRequest set_layer_bindings = 3;
+    CheckUnsavedChangesRequest check_unsaved_changes = 4;
+    SaveChangesRequest save_changes = 5;
+    DiscardChangesRequest discard_changes = 6;
+    SetSensitivityRequest set_sensitivity = 7;
+  }
+}
+
+message GetTouchpadConfigRequest {}
+message SetTouchpadModeRequest {
+  uint32 layer_id = 1;
+  Mode mode = 2;
+}
+message SetLayerBindingsRequest {
+  uint32 layer_id = 1;
+  repeated zmk.keymap.BehaviorBinding bindings = 2;
+}
+message CheckUnsavedChangesRequest {}
+message SaveChangesRequest {}
+message DiscardChangesRequest {}
+message SetSensitivityRequest {
+  uint32 sensitivity = 1;
+}
+
+message Response {
+  oneof response_type {
+    TouchpadConfig get_config = 1;
+    SetTouchpadModeResponse set_mode = 2;
+    SetLayerBindingsResponse set_layer_bindings = 3;
+    bool check_unsaved_changes = 4;
+    SaveChangesResponse save_changes = 5;
+    bool discard_changes = 6;
+    SetSensitivityResponse set_sensitivity = 7;
+  }
+}
+
+message SetTouchpadModeResponse {
+  ModeResult result = 1;
+}
+
+enum ModeResult {
+  MODE_OK = 0;
+  MODE_INVALID_LAYER = 1;
+}
+
+message SetLayerBindingsResponse {
+  BindResult result = 1;
+}
+
+enum BindResult {
+  BIND_OK = 0;
+  BIND_INVALID_LAYER = 1;
+  BIND_INVALID_BEHAVIOR = 2;
+}
+
+message SetSensitivityResponse {
+  SensitivityResult result = 1;
+}
+
+enum SensitivityResult {
+  SENSITIVITY_OK = 0;
+  SENSITIVITY_INVALID_VALUE = 1;
+}
+
+message SaveChangesResponse {
+  oneof result {
+    bool ok = 1;
+    SaveResult err = 2;
+  }
+}
+
+enum SaveResult {
+  SAVE_OK = 0;
+  SAVE_ERR = 1;
+}
+
+message DiscardChangesResponse {
+  bool success = 1;
+}
+
+message Notification {
+  oneof notification_type {
+    bool unsaved_changes_status_changed = 1;
+  }
+}
