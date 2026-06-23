@@ -12,6 +12,7 @@ enum Mode {
 
 message TouchpadConfig {
   repeated Layer layers = 1;
+  uint32 sensitivity = 2;
 }
 
 message Layer {
@@ -29,6 +30,7 @@ message Request {
     CheckUnsavedChangesRequest check_unsaved_changes = 4;
     SaveChangesRequest save_changes = 5;
     DiscardChangesRequest discard_changes = 6;
+    SetSensitivityRequest set_sensitivity = 7;
   }
 }
 
@@ -44,6 +46,9 @@ message SetLayerBindingsRequest {
 message CheckUnsavedChangesRequest {}
 message SaveChangesRequest {}
 message DiscardChangesRequest {}
+message SetSensitivityRequest {
+  uint32 sensitivity = 1;
+}
 
 message Response {
   oneof response_type {
@@ -53,6 +58,7 @@ message Response {
     bool check_unsaved_changes = 4;
     SaveChangesResponse save_changes = 5;
     bool discard_changes = 6;
+    SetSensitivityResponse set_sensitivity = 7;
   }
 }
 
@@ -73,6 +79,15 @@ enum BindResult {
   BIND_OK = 0;
   BIND_INVALID_LAYER = 1;
   BIND_INVALID_BEHAVIOR = 2;
+}
+
+message SetSensitivityResponse {
+  SensitivityResult result = 1;
+}
+
+enum SensitivityResult {
+  SENSITIVITY_OK = 0;
+  SENSITIVITY_INVALID_VALUE = 1;
 }
 
 message SaveChangesResponse {
