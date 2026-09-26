@@ -8,6 +8,7 @@ enum Mode {
   MODE_UNSPECIFIED = 0;
   MODE_GESTURE = 1;
   MODE_MOUSE_SIMULATION = 2;
+  MODE_JOYSTICK = 3;
 }
 
 message TouchpadConfig {
@@ -20,6 +21,7 @@ message Layer {
   string name = 2;
   Mode mode = 3;
   repeated zmk.keymap.BehaviorBinding bindings = 4;
+  uint32 frequency = 5;
 }
 
 message Request {
@@ -31,6 +33,7 @@ message Request {
     SaveChangesRequest save_changes = 5;
     DiscardChangesRequest discard_changes = 6;
     SetSensitivityRequest set_sensitivity = 7;
+    SetFrequencyRequest set_frequency = 8;
   }
 }
 
@@ -49,6 +52,10 @@ message DiscardChangesRequest {}
 message SetSensitivityRequest {
   uint32 sensitivity = 1;
 }
+message SetFrequencyRequest {
+  uint32 layer_id = 1;
+  uint32 frequency = 2;
+}
 
 message Response {
   oneof response_type {
@@ -59,6 +66,7 @@ message Response {
     SaveChangesResponse save_changes = 5;
     bool discard_changes = 6;
     SetSensitivityResponse set_sensitivity = 7;
+    SetFrequencyResponse set_frequency = 8;
   }
 }
 
@@ -88,6 +96,16 @@ message SetSensitivityResponse {
 enum SensitivityResult {
   SENSITIVITY_OK = 0;
   SENSITIVITY_INVALID_VALUE = 1;
+}
+
+message SetFrequencyResponse {
+  FrequencyResult result = 1;
+}
+
+enum FrequencyResult {
+  FREQ_OK = 0;
+  FREQ_INVALID_LAYER = 1;
+  FREQ_INVALID_VALUE = 2;
 }
 
 message SaveChangesResponse {
