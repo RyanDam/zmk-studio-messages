@@ -1,1 +1,3 @@
-zmk.touchpad.SetLayerBindingsRequest.bindings max_count:7
+zmk.touchpad.SetLayerBindingsRequest.bindings max_count:11
+zmk.touchpad.Layer.bindings max_count:11
+zmk.touchpad.Layer.name max_size:32
